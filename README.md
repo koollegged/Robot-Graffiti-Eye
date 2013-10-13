@@ -1,9 +1,8 @@
 Robot-Graffiti-Eye
 ==================
 
-Generative art program
-Built in Processing
-
+Generative art program.
+Requires Processing 2
 --------
 
 This project is called Robot Graffiti Eye.
