@@ -1,12 +1,9 @@
-//Is this going to be added to the repository
-
 import processing.video.*;
 import blobDetection.*;
 
 //increment of objects being drawn
 int currCount = 0;
-      
- 
+
 //when off, objects are cleared from screen
 String state ="on";
 String streamFrame = "off";
