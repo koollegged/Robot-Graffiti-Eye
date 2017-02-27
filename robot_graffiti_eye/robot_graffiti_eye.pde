@@ -56,6 +56,7 @@ PImage blackBg;
 
 void setup () {
     frameRate(30);
+    //ERROR - Needs to be number values
     size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
     //updaate so code finds usb camera first, or the other
     
