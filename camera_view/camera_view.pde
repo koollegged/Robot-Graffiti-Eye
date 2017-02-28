@@ -13,8 +13,8 @@ final int VIDEO_HEIGHT =  192;
 
 void setup () {
     frameRate(30);
-    //size (VIDEO_WIDTH, VIDEO_HEIGHT);
-    size(displayWidth, displayHeight);
+    size (VIDEO_WIDTH, VIDEO_HEIGHT);
+    //size(displayWidth, displayHeight);
 
     //updaate so code finds usb camera first, or the other
     
@@ -53,4 +53,3 @@ void draw () {
   }  
   image(videocam, 0, 0); 
 }
-
