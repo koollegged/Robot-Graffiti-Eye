@@ -1,7 +1,7 @@
 
 class DrawnObject {
   //creates lines from brightest light in camera view
-  String newcolor="", brush="", currParams, paramRecord, lastS="off", cursorType = "sphere";
+  String newcolor="", currParams, paramRecord, lastS="off", cursorType = "sphere";
   float x, y, z, px, py, pz, currPx, currPy, currX, currY, currZ, currW, easing = 0.065;  
   color currentcolor;
   String[] rgbs;
@@ -13,6 +13,7 @@ class DrawnObject {
                 currParams = dParams[1];
             }
         }
+      //println(currParams);
       return currParams; 
 
   }
@@ -71,7 +72,7 @@ void printCurve() {
     //fill(currentcolor);  
     pushMatrix();
     translate(xpos, ypos, zpos);
-    box( currPx, currPy ,currW);
+    //box( currPx, currPy ,currW);
     //thisCursor = (cursorType.equals("sphere") ) ? "ellipse" : "box";
     thisCursor = cursorType;
     float rndX = random(0,2) * PI;
@@ -200,10 +201,11 @@ void printCurve() {
 
    }
      //println(brush);
-      if (brush.equals("delay")) 
-      {
-        dObject.drawBlobsAndEdges(true,true);
-      }
+     // if (brush.equals("delay")) 
+     // {
+        //dcd  7-1-14
+        //dObject.drawBlobsAndEdges(true,true);
+     // }
  
   }
   
@@ -276,20 +278,23 @@ void printCurve() {
   void chooseObject(String objectIs, float currPx, float currPy, float currX, float currY, float currZ, float currW) {
 
     if (objectIs.equals("ellipse")) { //rename to cubes
+      strokeWeight(0.5);
       translate(currX, currY, currZ);      
-      box(((currX - currPx)* currW)*1.5* easing,((currY - currPy)* currW)*1.5* easing,(currPy * currZ)* easing); 
+      box(((currX - currPx)* currW)* easing,((currY - currPy)* currW)* easing,(currPy * currZ)* easing); 
     }
 
     if (objectIs.equals("box")) {
+      strokeWeight(0.5);
       translate(currX, currY, currZ);
       rotateX(PI/3.0);
       rotateY(PI/3.0);
       rotateZ(PI/3.0);
-      box((currPx * currW)* easing,(currPy * currW)* easing,(currPy * currZ)* easing);      
+      box(((currX - currPx)* currW)*1.5* easing,((currY - currPy)* currW)*1.5* easing,(currPy * currZ)* easing); 
     }
 
     if (objectIs.equals("stretch")) {
-    /*  translate(currX, currY, currZ);
+    /*  
+    translate(currX, currY, currZ);
       rotateX(PI/3.0);
       rotateY(PI/3.0);
       rotateZ(PI/3.0);
@@ -298,7 +303,9 @@ void printCurve() {
     }
     
 
-    if (objectIs.equals("peaks")) {*/
+    if (objectIs.equals("peaks")) {
+    */
+      strokeWeight(0.75);
       translate(currX, currY, currZ);
       float rndY = random(0,2) * PI;
       float rndZ = random(0,2) * PI;
@@ -327,21 +334,21 @@ void printCurve() {
   
   void chooseBrush(String brushIs) {
     
-       if (brushIs.equals("delay")) { 
-           //delayed brush
+       if (brushIs.equals("delay") || brushIs.equals("follow")) { 
+           //used to be delayed brush
           float targetX = xpos;
           x += (targetX - x) * easing;
           float targetY = ypos;
           y += (targetY - y) * easing;
        }
        
-       if (brushIs.equals("follow")) { 
-          //smooth bnrush
+       /*if (brushIs.equals("follow")) { 
+          //smooth brush
           float targetX = xpos;
           x += (targetX - x);
           float targetY = ypos;
           y += (targetY - y);
-       }
+       }*/
        
        if (brushIs.equals("point")) { 
         //points       
@@ -413,19 +420,19 @@ void printCurve() {
                             float rndY = random(0,2) * PI;
                             rotateY(rndY);  
                             rotateX(rndX);
-                            sphere(random(0,1) *((eA.x*width-eA.y*width) * (easing*currW)*2));
-                            sphere(random(0,1) *((eB.x*width-eB.y*width) * (easing*currW)*2));
+                            sphere(random(0,1) *((eA.x*width-eA.y*width) * (easing*currW)*0.25));
+                            sphere(random(0,1) *((eB.x*width-eB.y*width) * (easing*currW)*0.25));
                
                }
-               else if (cursorType.equals("ellipse") ){
+               else if (cursorType.equals("fpse") ){
                             translate(eA.x*width, eA.y*height);
                             rotateX(PI/3.0);
                             rotateY(PI/3.0);
                             rotateZ(PI/3.0);
                       
                                            
-                             box(eA.x*width, eA.y*height/8,(currPy * currZ)* easing*2); 
-                             box(eB.x*width, eB.y*height/8,(currPy * currZ)* easing*2); 
+                             box(eA.x*width, eA.y*height/8,(currPy * currZ)* easing*0.5); 
+                             box(eB.x*width, eB.y*height/8,(currPy * currZ)* easing*0.5); 
                   
                }    
                else if (cursorType.equals("stretch") ){  
@@ -437,16 +444,39 @@ void printCurve() {
                             float rndY = random(0,1) * PI;
                             float rndZ = random(5,10) * PI;
                             
+                            //ADD CHANGE TO MAKE CURRENT INCREMENT THIS. 
+                            
                             rotateY(rndY);  
                             rotateX(rndX);
                             rotateZ(rndZ);
                     
-                             box(eA.x*width/8, eA.y*height/4,(currPy * currZ)* easing*2); 
-                             box(eB.x*width/8, eB.y*height/4,(currPy * currZ)* easing*2); 
+                             box(eA.x*width/8, eA.y*height/4,(currPy * currZ)* easing*0.25); 
+                             box(eB.x*width/8, eB.y*height/4,(currPy * currZ)* easing*0.25); 
                   
+                 
+               }  else if (cursorType.equals("box") ){  
+ 
+                            stroke(currentcolor);
+                            strokeWeight(1);
+                            //fill(255);
+                            fill(currentcolor );
+                            translate(eA.x*width, eA.y*height, currZ);
+                            //position in the center of the screen
+                            //translate(width/2,height/2,currZ);
+                            float thisDetail = random(1,5);
+                            int intDetail = int(thisDetail);
+                  
+                            sphereDetail(intDetail);    
+                            float rndX = random(0,2) * PI;
+                            float rndY = random(0,2) * PI;
+                            /*
+                            rotateY(rndY);  
+                            rotateX(rndX);
+                            */
+                            sphere(random(0,1) *((eA.x*width-eA.y*width) * (easing*currW)*0.25));
+                            //sphere(random(0,1) *((eB.x*width-eB.y*width) * (easing*currW)*2));
                              
              } else {
-                 
                             noStroke();
                             //fill(255);
                             //fill(currentcolor,fillalpha);
@@ -458,7 +488,7 @@ void printCurve() {
                             float rndY = random(0,2) * PI;
                             rotateY(rndY);  
                             rotateX(rndX);
-                            sphere(random(0,1) *((eA.x*width-eA.y*width) * (easing*currW)*1.25));
+                            sphere(random(0,1) *((eA.x*width-eA.y*width) * (easing*currW)*0.25));
                             //sphere(random(0,1) *((eB.x*width-eB.y*width) * (easing*currW)*2));
 
                }
