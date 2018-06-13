@@ -15,9 +15,9 @@ class DrawParamThread extends Thread {
     available = false;
     count = 0;
   //online  
-  paramAddress = "http://www.createcreate.us/exquisite-corpse/source/get_data_db.php"; 
+  //paramAddress = "http://www.createcreate.us/exquisite-corpse/source/get_data_db.php"; 
   //ofline mode
-  //paramAddress = "offline.txt"; 
+  paramAddress = "offline.txt"; 
 
     
   }

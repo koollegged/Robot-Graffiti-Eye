@@ -1,18 +1,15 @@
-//Is this going to be added to the repository
-
 import processing.video.*;
 import blobDetection.*;
 
 //increment of objects being drawn
 int currCount = 0;
-      
- 
+
 //when off, objects are cleared from screen
 String state ="on";
 String streamFrame = "off";
 
 //sample rate
-int drawNFrame = 2;
+int drawNFrame = 31;//10000000
 
 //current color of object
 int currR, currG, currB;
@@ -55,28 +52,33 @@ float strokealpha = 53;
 color strokecolor = 10;
 PImage whiteBg;
 PImage blackBg;
+String brush="";
 
 void setup () {
     frameRate(30);
-    size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
+    //size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
+    size(displayWidth, displayHeight, P3D);
+
     //updaate so code finds usb camera first, or the other
     
       String[] cameras = Capture.list();
-  
+      String rF = "Rocketfish HD Webcam";
+      String uS = "Logitech Camera";
+      String thisCamera = ""; 
+       
       if (cameras.length == 0) {
         println("There are no cameras available for capture.");
         exit();
       } else {
         for (int i = 0; i < cameras.length; i++) {
-          String rF = "Rocketfish HD Webcam";
-          String uS = "USB2.0 Camera";
-          if(cameras[i].contains(rF)) cameraName = rF;
-          if(cameras[i].contains(uS)) cameraName = uS;
-    
+          if (thisCamera.equals("")) thisCamera = cameras[i];    
         }
       }
+
+    if(thisCamera.contains(rF)) cameraName = rF;
+    if(thisCamera.contains(uS)) cameraName = uS;
       
-      println(cameraName);
+      println(thisCamera );
     // The camera can be initialized directly using an 
     // element from the array returned by list():
     if (cameraName!="") {
@@ -101,7 +103,7 @@ void setup () {
     //img = new PImage(80,60); 
     theBlobDetection = new BlobDetection(blobImg.width, blobImg.height);
     theBlobDetection.setPosDiscrimination(true);
-    theBlobDetection.setThreshold(0.2f); // will detect bright areas whose luminosity > 0.2f;
+    theBlobDetection.setThreshold(0.365); // will detect bright areas whose luminosity > 0.2f;
 
 }
  
@@ -153,7 +155,7 @@ void draw () {
     PImage cm = get();
     image(cm, 0,0);  
     cm.loadPixels();      
-    image(blackBg, 0, 0);
+    if (brush.equals("follow")) image(whiteBg, 0, 0);
     if (streamFrame.equals("off")) image(cm, 0, 0, width/12, height/12); 
    
     int this_height=cm.height;int this_width=cm.width;
@@ -180,13 +182,13 @@ void draw () {
           currR = int(red(pixelColor)); currG = int(green(pixelColor)); currB = int(blue(pixelColor));
         }
 
-        if (pixelBrightness <= dimValue) {
-          dimValue = pixelBrightness;
+        //if (pixelBrightness <= dimValue) {
+        //  dimValue = pixelBrightness;
           
           xdim = i;
           ydim = j;          
 
-        }
+        //}
         
           index++;
 
@@ -196,13 +198,15 @@ void draw () {
     
       dObject.update();     
       //changes size of objects at brightest point
-      dObject.getLine(xPosArr);
+      //dObject.getLine(xPosArr);
 
     
       } else {
         
       //set position, i think  
-      dObject.updateCurve(this_width,this_height);  
+      //dObject.updateCurve(this_width,this_height);  
+      //dcd 7.9.2014
+      dObject.updateCurve(Math.round(xdim), Math.round(ydim));  
  
       //set color based on the previous
       int index = int((ypos*this_width)+xpos) > this_width*this_height ? 0 : int((ypos*this_width)+xpos);      
@@ -226,6 +230,7 @@ void draw () {
     {
       newFrame=false;
       //image(videocam,0,0,width,height);
+
       blobImg.copy(videocam, 0, 0, videocam.width, videocam.height, 
           0, 0, blobImg.width, blobImg.height);
       fastblur(blobImg, 2);
