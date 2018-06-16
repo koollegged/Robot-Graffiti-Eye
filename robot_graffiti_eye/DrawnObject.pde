@@ -308,7 +308,7 @@ void printCurve() {
       strokeWeight(0.75);
       translate(currX, currY, currZ);
       float rndY = random(0,2) * PI;
-      float rndZ = random(0,2) * PI;
+      //float rndZ = random(0,2) * PI;
       
       rotateY(rndY);  
       rotateX(rndY);

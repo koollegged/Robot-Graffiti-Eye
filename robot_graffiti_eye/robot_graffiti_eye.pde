@@ -29,13 +29,6 @@ BlobDetection theBlobDetection;
 PImage blobImg;
 boolean newFrame=false;
 
-//screen settings
-final int VIDEO_WIDTH  = 1024;
-final int VIDEO_HEIGHT =  768;
-//final int VIDEO_WIDTH  = displayWidth;
-//final int VIDEO_HEIGHT =  displayHeight;
-
-
 HashMap zMap = new HashMap(8);
  
 // tracking Position
@@ -54,11 +47,12 @@ PImage whiteBg;
 PImage blackBg;
 String brush="";
 
+void settings() {
+  fullScreen();
+}
+
 void setup () {
     frameRate(30);
-    //size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
-    size(displayWidth, displayHeight, P3D);
-
     //updaate so code finds usb camera first, or the other
     
       String[] cameras = Capture.list();
@@ -82,9 +76,9 @@ void setup () {
     // The camera can be initialized directly using an 
     // element from the array returned by list():
     if (cameraName!="") {
-      videocam = new Capture (this, width, height,cameraName);
+      videocam = new Capture (this, cameraName);
     } else {
-      videocam = new Capture (this, width, height);
+      videocam = new Capture (this);
     }
     videocam.start();
     whiteBg = loadImage("white.png");
@@ -110,7 +104,7 @@ void setup () {
 // ==================================================
 // captureEvent()
 // ==================================================
-void captureEvent(Capture cam)
+void captureEvent(Capture videocam)
 {
   videocam.read();
   newFrame = true;
@@ -162,7 +156,8 @@ void draw () {
     
     
     if (frameCount % drawNFrame == 0){ 
-      float brightestValue = 0, dimValue = 255; // Brightness of the brightest video pixel
+      float brightestValue = 0;
+      //float dimValue = 255; // Brightness of the brightest video pixel
       int index = 0; 
       for (float  j= 0; j < this_height; j++) {
         for (float i = 0; i < this_width; i++) {
