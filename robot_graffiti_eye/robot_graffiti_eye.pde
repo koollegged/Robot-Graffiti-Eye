@@ -46,6 +46,7 @@ color strokecolor = 10;
 PImage whiteBg;
 PImage blackBg;
 String brush="";
+<<<<<<< HEAD
 
 void settings() {
   fullScreen();
@@ -53,6 +54,14 @@ void settings() {
 
 void setup () {
     frameRate(30);
+=======
+
+void setup () {
+    frameRate(30);
+    //size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
+    size(displayWidth, displayHeight, P3D);
+
+>>>>>>> c3922ae64f8a9a389e8fad7ae30d1864bfb4003b
     //updaate so code finds usb camera first, or the other
     
       String[] cameras = Capture.list();
