@@ -46,23 +46,13 @@ color strokecolor = 10;
 PImage whiteBg;
 PImage blackBg;
 String brush="";
-<<<<<<< HEAD
 
 void settings() {
   fullScreen();
 }
 
 void setup () {
-    frameRate(30);
-=======
-
-void setup () {
-    frameRate(30);
-    //size (VIDEO_WIDTH, VIDEO_HEIGHT, P3D);
-    size(displayWidth, displayHeight, P3D);
-
->>>>>>> c3922ae64f8a9a389e8fad7ae30d1864bfb4003b
-    //updaate so code finds usb camera first, or the other
+    frameRate(30); //updaate so code finds usb camera first, or the other
     
       String[] cameras = Capture.list();
       String rF = "Rocketfish HD Webcam";
@@ -113,7 +103,7 @@ void setup () {
 // ==================================================
 // captureEvent()
 // ==================================================
-void captureEvent(Capture videocam)
+void captureEvent(Capture cam)
 {
   videocam.read();
   newFrame = true;
@@ -165,8 +155,7 @@ void draw () {
     
     
     if (frameCount % drawNFrame == 0){ 
-      float brightestValue = 0;
-      //float dimValue = 255; // Brightness of the brightest video pixel
+      float brightestValue = 0, dimValue = 255; // Brightness of the brightest video pixel
       int index = 0; 
       for (float  j= 0; j < this_height; j++) {
         for (float i = 0; i < this_width; i++) {

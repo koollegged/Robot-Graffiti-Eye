@@ -308,7 +308,7 @@ void printCurve() {
       strokeWeight(0.75);
       translate(currX, currY, currZ);
       float rndY = random(0,2) * PI;
-      //float rndZ = random(0,2) * PI;
+      float rndZ = random(0,2) * PI;
       
       rotateY(rndY);  
       rotateX(rndY);
@@ -452,7 +452,6 @@ void printCurve() {
                     
                              box(eA.x*width/8, eA.y*height/4,(currPy * currZ)* easing*0.25); 
                              box(eB.x*width/8, eB.y*height/4,(currPy * currZ)* easing*0.25); 
-<<<<<<< HEAD
                   
                  
                }  else if (cursorType.equals("box") ){  
@@ -467,22 +466,6 @@ void printCurve() {
                             float thisDetail = random(1,5);
                             int intDetail = int(thisDetail);
                   
-=======
-                  
-                 
-               }  else if (cursorType.equals("box") ){  
- 
-                            stroke(currentcolor);
-                            strokeWeight(1);
-                            //fill(255);
-                            fill(currentcolor );
-                            translate(eA.x*width, eA.y*height, currZ);
-                            //position in the center of the screen
-                            //translate(width/2,height/2,currZ);
-                            float thisDetail = random(1,5);
-                            int intDetail = int(thisDetail);
-                  
->>>>>>> c3922ae64f8a9a389e8fad7ae30d1864bfb4003b
                             sphereDetail(intDetail);    
                             float rndX = random(0,2) * PI;
                             float rndY = random(0,2) * PI;
