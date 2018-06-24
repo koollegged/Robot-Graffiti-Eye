@@ -1,4 +1,4 @@
-import processing.video.*;
+import gohai.glvideo.*;
 import blobDetection.*;
 
 //increment of objects being drawn
@@ -6,7 +6,7 @@ int currCount = 0;
 
 //when off, objects are cleared from screen
 String state ="on";
-String streamFrame = "off";
+String streamFrame = "on";
 
 //sample rate
 int drawNFrame = 31;//10000000
@@ -24,7 +24,7 @@ String[] dParams;
 
 //output settings  
 String cameraName = "";   
-Capture videocam;
+GLCapture videocam;
 BlobDetection theBlobDetection;
 PImage blobImg;
 boolean newFrame=false;
@@ -47,16 +47,31 @@ PImage whiteBg;
 PImage blackBg;
 String brush="";
 
-void settings() {
-  fullScreen();
-}
 
 void setup () {
-    frameRate(30); //updaate so code finds usb camera first, or the other
+    frameRate(15); //updaate so code finds usb camera first, or the other
   
-    videocam = new Capture (this);
-    
+   size(200,200, P3D);
+
+  String[] devices = GLCapture.list();
+  println("Devices:");
+  printArray(devices);
+  if (0 < devices.length) {
+    String[] configs = GLCapture.configs(devices[0]);
+    println("Configs:");
+    printArray(configs);
+  }
+
+  // this will use the first recognized camera by default
+  videocam = new GLCapture(this);
+
+  // you could be more specific also, e.g.
+  //video = new GLCapture(this, devices[0]);
+  //video = new GLCapture(this, devices[0], 640, 480, 25);
+  //video = new GLCapture(this, devices[0], configs[0]);
+   
     videocam.start();
+   
     whiteBg = loadImage("white.png");
     blackBg = loadImage("black.png");
     noFill();
@@ -68,19 +83,20 @@ void setup () {
     zMap.put(0.25, new Float (10.0)); zMap.put(0.5, new Float(5.0)); zMap.put(0.75, new Float(3.0)); zMap.put(1.0, new Float(2.0)); zMap.put(2.0, new Float(1.0)); zMap.put(3.0, new Float(0.75));  zMap.put(5.0, new Float(0.5)); zMap.put(10.0, new Float(0.25));
     // BlobDetection
     // img which will be sent to detection (a smaller copy of the cam frame);
-    blobImg = createImage(80,60,RGB); 
+    blobImg = createImage(100,100,RGB); 
     
     //img = new PImage(80,60); 
     theBlobDetection = new BlobDetection(blobImg.width, blobImg.height);
     theBlobDetection.setPosDiscrimination(true);
     theBlobDetection.setThreshold(0.365); // will detect bright areas whose luminosity > 0.2f;
 
+
 }
  
 // ==================================================
 // captureEvent()
 // ==================================================
-void captureEvent(Capture cam)
+void captureEvent(GLCapture videocam)
 {
   videocam.read();
   newFrame = true;
@@ -90,23 +106,25 @@ void captureEvent(Capture cam)
 // draw()
 // ==================================================
 void draw () {
+  println("IN DRAW");
+  
   //high quality document
-  if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.tif"); 
+  //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.tif"); 
   //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.png"); 
-  background (255);    
-  lights();
-  smooth();
+  //background (255);    
+  //lights();
+  //smooth();
   
   //LIGHTING POROPERTIES
-  lightSpecular(204, 204, 204); 
-  directionalLight(128,128,128, 1.5, -2, -1); 
-  directionalLight(128, 128, 128, 0, 2, 0); 
+  //lightSpecular(204, 204, 204); 
+  //directionalLight(128,128,128, 1.5, -2, -1); 
+  //directionalLight(128, 128, 128, 0, 2, 0); 
   //ambientLight(255,255,255);
    
    
    //MATERIAL PROPERTIES
   //emissive(126,126,126);
-  shininess(3.0);
+  //shininess(3.0);
 
   
   //flip image on vertical axis. Might be useful when interactive
@@ -118,9 +136,12 @@ void draw () {
   popMatrix();
  */
 
- image(videocam, 0, 0); 
+ if (videocam.available()) {
+    videocam.read();
+  }
+  image(videocam, 0, 0, width, height);  
   
-  
+  /*
   if (state.equals("on")) {
     PImage cm = get();
     image(cm, 0,0);  
@@ -208,6 +229,7 @@ void draw () {
       dObject.drawLine(xPosArr);
       //DEBUG drawBlobsAndEdges(true,true);
     }
+  */
   
 }
 
