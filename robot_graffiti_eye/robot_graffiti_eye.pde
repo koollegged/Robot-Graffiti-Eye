@@ -1,4 +1,5 @@
-import gohai.glvideo.*;
+//import gohai.glvideo.*;
+import processing.video.*;
 import blobDetection.*;
 
 //increment of objects being drawn
@@ -24,7 +25,7 @@ String[] dParams;
 
 //output settings  
 String cameraName = "";   
-GLCapture videocam;
+Capture cam;
 BlobDetection theBlobDetection;
 PImage blobImg;
 boolean newFrame=false;
@@ -50,27 +51,17 @@ String brush="";
 
 void setup () {
     frameRate(15); //updaate so code finds usb camera first, or the other
+    fullScreen(P3D);
   
-   size(200,200, P3D);
+    String[] cameras = Capture.list();
+    /*      
+    println("Available cameras:");      
+    printArray(cameras);
+    */ 
 
-  String[] devices = GLCapture.list();
-  println("Devices:");
-  printArray(devices);
-  if (0 < devices.length) {
-    String[] configs = GLCapture.configs(devices[0]);
-    println("Configs:");
-    printArray(configs);
-  }
-
-  // this will use the first recognized camera by default
-  videocam = new GLCapture(this);
-
-  // you could be more specific also, e.g.
-  //video = new GLCapture(this, devices[0]);
-  //video = new GLCapture(this, devices[0], 640, 480, 25);
-  //video = new GLCapture(this, devices[0], configs[0]);
-   
-    videocam.start();
+    cam = new Capture(this, cameras[1]);
+    // Start capturing the images from the camera
+    cam.start();
    
     whiteBg = loadImage("white.png");
     blackBg = loadImage("black.png");
@@ -96,9 +87,9 @@ void setup () {
 // ==================================================
 // captureEvent()
 // ==================================================
-void captureEvent(GLCapture videocam)
+void captureEvent(Capture cam)
 {
-  videocam.read();
+  cam.read();
   newFrame = true;
 }
 
@@ -106,47 +97,45 @@ void captureEvent(GLCapture videocam)
 // draw()
 // ==================================================
 void draw () {
-  println("IN DRAW");
   
   //high quality document
   //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.tif"); 
-  //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.png"); 
-  //background (255);    
-  //lights();
-  //smooth();
+  if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.png"); 
+  background (255);    
+  lights();
+  smooth();
   
   //LIGHTING POROPERTIES
-  //lightSpecular(204, 204, 204); 
-  //directionalLight(128,128,128, 1.5, -2, -1); 
-  //directionalLight(128, 128, 128, 0, 2, 0); 
+  lightSpecular(204, 204, 204); 
+  directionalLight(128,128,128, 1.5, -2, -1); 
+  directionalLight(128, 128, 128, 0, 2, 0); 
   //ambientLight(255,255,255);
    
    
    //MATERIAL PROPERTIES
-  //emissive(126,126,126);
-  //shininess(3.0);
+  emissive(126,126,126);
+  shininess(3.0);
 
   
-  //flip image on vertical axis. Might be useful when interactive
- /* 
+  //flip image on vertical axis. Might be useful when interactive 
   pushMatrix();
   scale(-1,1);
   translate(-width, 0);
-  image(videocam, 0, 0); 
+  image(cam, 0, 0); 
   popMatrix();
- */
+ 
 
- if (videocam.available()) {
-    videocam.read();
+ if (cam.available()) {
+    cam.read();
   }
-  image(videocam, 0, 0, width, height);  
+  image(cam, 0, 0, width, height);  
   
-  /*
+  
   if (state.equals("on")) {
     PImage cm = get();
     image(cm, 0,0);  
     cm.loadPixels();      
-    if (brush.equals("follow")) image(whiteBg, 0, 0);
+  //  if (brush.equals("follow")) image(whiteBg, 0, 0);
     if (streamFrame.equals("off")) image(cm, 0, 0, width/12, height/12); 
    
     int this_height=cm.height;int this_width=cm.width;
@@ -220,16 +209,16 @@ void draw () {
     if (newFrame)
     {
       newFrame=false;
-      //image(videocam,0,0,width,height);
+      //image(cam,0,0,width,height);
 
-      blobImg.copy(videocam, 0, 0, videocam.width, videocam.height, 
+      blobImg.copy(cam, 0, 0, cam.width, cam.height, 
           0, 0, blobImg.width, blobImg.height);
       fastblur(blobImg, 2);
       theBlobDetection.computeBlobs(blobImg.pixels);
       dObject.drawLine(xPosArr);
       //DEBUG drawBlobsAndEdges(true,true);
     }
-  */
+  
   
 }
 
