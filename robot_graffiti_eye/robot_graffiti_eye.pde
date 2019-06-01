@@ -1,6 +1,11 @@
 //import gohai.glvideo.*;
 import processing.video.*;
 import blobDetection.*;
+import java.net.*;
+import javax.imageio.*;
+import java.io.*;   
+import java.awt.image.*; 
+
 
 //increment of objects being drawn
 int currCount = 0;
@@ -29,6 +34,9 @@ Capture cam;
 BlobDetection theBlobDetection;
 PImage blobImg;
 boolean newFrame=false;
+ReceiverThread thread;
+PImage video;
+
 
 HashMap zMap = new HashMap(8);
  
@@ -80,7 +88,10 @@ void setup () {
     theBlobDetection = new BlobDetection(blobImg.width, blobImg.height);
     theBlobDetection.setPosDiscrimination(true);
     theBlobDetection.setThreshold(0.365); // will detect bright areas whose luminosity > 0.2f;
-
+  
+    video = createImage(320,240,RGB);
+    thread = new ReceiverThread(video.width,video.height);
+    thread.start();
 
 }
  
@@ -97,10 +108,15 @@ void captureEvent(Capture cam)
 // draw()
 // ==================================================
 void draw () {
+    if (thread.available()) {
+      video = thread.getImage();
+    }
+
+  
   
   //high quality document
   //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.tif"); 
-  if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.png"); 
+  //if (streamFrame.equals("on")) saveFrame("mov/graffiti-## ##.png"); 
   background (255);    
   lights();
   smooth();
@@ -128,7 +144,7 @@ void draw () {
  if (cam.available()) {
     cam.read();
   }
-  image(cam, 0, 0, width, height);  
+  image(video, 0, 0, width, height);  
   
   
   if (state.equals("on")) {
